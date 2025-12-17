@@ -2,27 +2,32 @@ pipeline {
     agent any
 
     triggers {
-        githubPush()
+        githubPush()   
     }
 
     stages {
+
         stage('Clone') {
             steps {
-                
-                git branch: 'main', url: 'https://github.com/eclipse-ee4j/cargotracker.git'
+                git branch: 'develop', url: 'https://github.com/akito-sama/cargo-tracker.git'
             }
         }
 
-        stage('Build & test') {
+        stage('Build & Test with Coverage') {
             steps {
                 bat 'mvn clean verify'
             }
         }
 
        
-
-       
     }
-
-    
+//
+    post {
+        success {
+            echo 'Build et analyse terminés avec succès !'
+        }
+        failure {
+            echo 'Échec du build ou des tests.'
+        }
+    }
 }
